@@ -2,27 +2,58 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the city of residence:");
+        System.out.print("Wpisz swoje miasto: ");
         String city = scanner.nextLine();
-        System.out.println("Enter the age:");
-        int age = scanner.nextInt();
-        System.out.println("Is it a Thursday? (true/false)");
-        boolean isThursday = scanner.nextBoolean();
-        double ticketPrice = 40.0; // Base ticket price
-        if (age < 10) {
-            ticketPrice = 0.0; // Admission is free for children under 10
-        } else if (age >= 10 && age <= 18) {
-            ticketPrice *= 0.5; // 50% discount for ages between 10 and 18
+        System.out.print("Wpisz swój wiek: ");
+            int age = scanner.nextInt();
+        scanner.nextLine();
+        System.out.print("Czy jesteś rezydentem Warszawy? (tak/nie): ");
+            boolean fromWarsaw = scanner.nextLine().equalsIgnoreCase("tak");
+        System.out.print("Czy jest czwartek? (tak/nie): ");
+            boolean isThursday = scanner.nextLine().equalsIgnoreCase("yes");
+            double CenaBiletu = obliczCenaBiletu(city, age, fromWarsaw, isThursday);
+            double discount = calculateDiscount(city, age, fromWarsaw, isThursday);
+        System.out.println("\nData: " + city + ", " + age + " wiek, " + (isThursday ? "Czwartek" : "dzien tygodnia"));
+        System.out.println("cena biletu: " + CenaBiletu + " PLN");
+        System.out.println("Znizka: " + discount + "%");
+    }
+
+
+
+    public static double obliczCenaBiletu(String city, int age, boolean fromWarsaw, boolean isThursday) {
+        double basePrice = 40;
+        double cenaBiletu;
+            if (age < 10)
+            {
+            cenaBiletu = 0;
+        } else if (age <= 18)
+        {
+            cenaBiletu = basePrice / 2;
+        } else
+        {
+            cenaBiletu = basePrice;
         }
-        if (city.equalsIgnoreCase("Warsaw")) {
-            ticketPrice *= 0.9; // Additional 10% discount for Warsaw residents
+            if (fromWarsaw)
+            {
+            cenaBiletu *= 0.9;
         }
-        if (isThursday) {
-            ticketPrice = 0.0; // Admission is free on Thursdays
+            if (isThursday)
+        {
+            cenaBiletu = 0;
         }
-        double discount = 100 - (ticketPrice / 40 * 100); // Calculate discount percentage
-        System.out.println("Data: " + city + ", " + age + " years old, " + (isThursday ? "weekday" : "weekend"));
-        System.out.println("Ticket price: " + ticketPrice + " PLN, Discount: " + discount + "%");
-        scanner.close();
+        return cenaBiletu;
+    }
+    public static double calculateDiscount(String city, int age, boolean fromWarsaw, boolean isThursday) {
+        double discount = 0;
+            if (age <= 18) {
+            discount += 50;
+        }
+            if (fromWarsaw) {
+            discount += 10;
+        }
+            if (isThursday) {
+            discount = 100;
+        }
+            return discount;
     }
 }
